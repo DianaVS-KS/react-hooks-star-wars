@@ -6,27 +6,33 @@ import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import axios from "axios";
 import { ThemeContext, LanguageContext } from "./App";
+import DetailsModal from "./modal";
 
 function MoviesList({ additionalMovies }) {
+
   const [state, setState] = useState({
     movies: [],
     loading: false
   });
+
   const [displayTitle, setDisplayTitle] = useState("");
   const theme = useContext(ThemeContext);
   const language = useContext(LanguageContext);
-  console.log("language ", language);
+
+  // console.log("language ", language);
+  
   useEffect(() => {
     /// serviceX.subscribe(user);
     setState({ ...state, loading: true });
     axios.get("https://swapi.dev/api/films/").then(({ data: { results } }) => {
-      console.log("movies data", results);
+      // console.log("movies data", results);
       setState({ movies: results, loading: false });
     });
     return () => {
       /// serviceX.unsubscribe(user);
     };
   }, []);
+
   useEffect(() => {
     const newMovie = additionalMovies.length
       ? additionalMovies[additionalMovies.length - 1]
@@ -38,6 +44,7 @@ function MoviesList({ additionalMovies }) {
       });
     }
   }, [additionalMovies]);
+
   useEffect(() => {
     const newDisplayTitle =
       language === "en/us" ? "Star War movies" : "Peliculas de Star Wars";
@@ -46,6 +53,7 @@ function MoviesList({ additionalMovies }) {
   const textStyle = {
     color: theme.foreground
   };
+
   return (
     <>
       <h4>{displayTitle}</h4>
@@ -58,6 +66,7 @@ function MoviesList({ additionalMovies }) {
                 <CardContent>
                   <h4 style={textStyle}>{movie.director}</h4>
                 </CardContent>
+                <DetailsModal movie={movie}/>
               </Card>
             </Grid>
           );
